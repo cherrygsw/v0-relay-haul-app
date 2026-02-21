@@ -172,10 +172,10 @@ export default function HomePage() {
         {/* Stats row */}
         <div className="mt-24 grid grid-cols-2 gap-6 lg:grid-cols-4">
           {[
-            { value: "2,015", label: "Miles covered", sub: "Chicago to LA" },
-            { value: "4", label: "Relay segments", sub: "HOS-legal legs" },
-            { value: "<30s", label: "Dispatch time", sub: "AI-powered" },
-            { value: "100%", label: "Compliance", sub: "HOS guaranteed" },
+            { value: "2,015", label: "Miles covered", sub: "Melrose Park, IL to Rialto, CA" },
+            { value: "4", label: "Relay legs", sub: "11-hr drive / 14-hr window compliant" },
+            { value: "$1.82", label: "Avg rate/mi", sub: "vs $1.60 market avg (C.H. Robinson)" },
+            { value: "38.4k", label: "Pounds moved", sub: "Consumer electronics, dry van" },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
               <p className="font-serif text-4xl font-medium text-foreground lg:text-5xl">

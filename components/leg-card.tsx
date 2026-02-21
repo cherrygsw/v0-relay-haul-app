@@ -1,19 +1,21 @@
 "use client"
 
 import { useState } from "react"
-import { MapPin, CheckCircle2 } from "lucide-react"
+import { MapPin, CheckCircle2, Snowflake, Package } from "lucide-react"
 import type { Leg } from "@/lib/mock-data"
+import { HOS_RULES } from "@/lib/mock-data"
 import { cn } from "@/lib/utils"
 
 export function LegCard({ leg, showAccept = true }: { leg: Leg; showAccept?: boolean }) {
   const [accepted, setAccepted] = useState(false)
 
   const pay = Math.round(leg.rateCents / 100)
-  const ratePerMile = (leg.rateCents / 100 / leg.miles).toFixed(2)
-  const driveHours = Math.round(leg.miles / 55)
+  const driveHours = Math.round(leg.miles / HOS_RULES.avgSpeedMph)
+  const fuelSurcharge = Math.round(leg.fuelSurchargeCents / 100)
+  const totalPay = pay + fuelSurcharge
+  const isReefer = leg.temperature !== undefined
 
-  // AI-style one-liner
-  const summary = `${leg.miles} mi to ${leg.handoffPoint.split(" - ")[0]} in ${leg.destination.split(",")[0]} \u2014 about ${driveHours} hrs, $${pay.toLocaleString()} payout.`
+  const summary = `${leg.miles} mi${leg.deadheadMiles > 0 ? ` (+${leg.deadheadMiles} DH)` : ""} to ${leg.handoffPoint.split("#")[0].trim()} in ${leg.destination} \u2014 ~${driveHours} hrs, $${totalPay.toLocaleString()} total.`
 
   return (
     <div
@@ -34,40 +36,60 @@ export function LegCard({ leg, showAccept = true }: { leg: Leg; showAccept?: boo
             <p className="text-base font-bold text-foreground truncate">
               {leg.origin} <span className="text-muted-foreground font-normal mx-1">{">"}</span> {leg.destination}
             </p>
-            <p className="text-xs text-muted-foreground mt-0.5 font-mono">
-              {leg.loadId}
-            </p>
+            <div className="flex items-center gap-2 mt-0.5">
+              <span className="text-xs text-muted-foreground font-mono">{leg.loadId}</span>
+              {isReefer && (
+                <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-blue-400 bg-blue-400/10 rounded-full px-2 py-0.5">
+                  <Snowflake className="h-2.5 w-2.5" />
+                  {leg.temperature}&deg;F
+                </span>
+              )}
+              {leg.deadheadMiles > 0 && (
+                <span className="text-[10px] text-warning font-medium">+{leg.deadheadMiles} mi DH</span>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Key stats - the 4 things a driver cares about */}
+        {/* Key stats */}
         <div className="grid grid-cols-3 gap-3">
           <div className="rounded-xl bg-secondary p-3 text-center">
             <p className="text-xl font-bold text-foreground tabular-nums">{leg.miles}</p>
             <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider mt-0.5">miles</p>
           </div>
           <div className="rounded-xl bg-secondary p-3 text-center">
-            <p className="text-xl font-bold text-success tabular-nums">${pay.toLocaleString()}</p>
-            <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider mt-0.5">pay</p>
+            <p className="text-xl font-bold text-success tabular-nums">${totalPay.toLocaleString()}</p>
+            <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider mt-0.5">total pay</p>
           </div>
           <div className="rounded-xl bg-secondary p-3 text-center">
-            <p className="text-xl font-bold text-foreground tabular-nums">${ratePerMile}</p>
+            <p className="text-xl font-bold text-foreground tabular-nums">${leg.ratePerMile.toFixed(2)}</p>
             <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider mt-0.5">per mi</p>
           </div>
         </div>
 
-        {/* Handoff truck stop - prominent */}
+        {/* Handoff truck stop */}
         <div className="rounded-xl bg-primary/8 border border-primary/15 px-4 py-3">
           <p className="text-xs text-muted-foreground">Handoff at</p>
           <p className="text-sm font-bold text-foreground mt-0.5">{leg.handoffPoint}</p>
+          <p className="text-xs text-muted-foreground mt-0.5">{leg.handoffAddress}</p>
         </div>
 
-        {/* AI summary one-liner */}
+        {/* Commodity & weight */}
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <Package className="h-3 w-3" />
+          <span>{leg.commodity}</span>
+          <span className="text-border">|</span>
+          <span>{(leg.weight / 1000).toFixed(1)}k lbs</span>
+          <span className="text-border">|</span>
+          <span className="text-muted-foreground/60">FSC ${fuelSurcharge}</span>
+        </div>
+
+        {/* AI summary */}
         <p className="text-xs text-muted-foreground leading-relaxed italic">
           {summary}
         </p>
 
-        {/* Big green accept button - unmissable, full width, 56px tall */}
+        {/* Accept button */}
         {showAccept && !accepted && leg.status === "OPEN" && (
           <button
             onClick={() => setAccepted(true)}
