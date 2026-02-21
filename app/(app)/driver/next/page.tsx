@@ -4,17 +4,11 @@ import { useState } from "react"
 import {
   Home,
   Truck,
-  Sparkles,
   MapPin,
-  DollarSign,
   Clock,
-  ArrowRight,
   CheckCircle2,
-  Navigation,
-  TrendingUp,
+  ArrowRight,
 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { DEMO_DRIVERS, NEARBY_LOADS } from "@/lib/mock-data"
 import { cn } from "@/lib/utils"
 
@@ -25,273 +19,167 @@ const homeMiles = 670
 const homeLoad = NEARBY_LOADS[0]
 const stayLoad = NEARBY_LOADS[2]
 
+const recommended: "HOME" | "STAY" = "STAY"
+
 export default function WhatsNextPage() {
   const [choice, setChoice] = useState<"HOME" | "STAY" | null>(null)
 
   return (
-    <div className="flex flex-col gap-10">
-      {/* Header */}
-      <div className="flex flex-col gap-1">
-        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
-          Decision Engine
-        </p>
+    <div className="flex flex-col gap-6">
+      {/* Location + HOS strip */}
+      <div className="flex items-center justify-between rounded-2xl bg-card border border-border px-5 py-4">
         <div className="flex items-center gap-3">
-          <h1 className="font-serif text-3xl font-medium text-foreground lg:text-4xl">
-            {"What's Next?"}
-          </h1>
-          <Badge className="rounded-full bg-success/10 text-success border-0 text-[10px] font-semibold">
-            Leg 1 Complete
-          </Badge>
-        </div>
-        <p className="text-sm text-muted-foreground">
-          AI has analyzed nearby loads and your home route
-        </p>
-      </div>
-
-      {/* Current Status */}
-      <div className="rounded-2xl border border-border bg-card p-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary">
-                <MapPin className="h-5 w-5 text-primary" />
-              </div>
-              <span className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75" />
-                <span className="relative inline-flex h-4 w-4 rounded-full bg-success ring-2 ring-card" />
-              </span>
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-foreground">
-                Currently in {currentLocation}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                {driver.hosRemainingHours}h HOS remaining &middot; Home is{" "}
-                {homeMiles} mi away in {driver.homeCity}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 rounded-full bg-secondary px-4 py-2">
-            <Clock className="h-3.5 w-3.5 text-primary" />
-            <span className="text-xs font-medium text-foreground">
-              {driver.hosRemainingHours}h drive time left
+          <div className="relative">
+            <MapPin className="h-5 w-5 text-primary" />
+            <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-success" />
             </span>
           </div>
+          <div>
+            <p className="text-sm font-bold text-foreground">{currentLocation}</p>
+            <p className="text-xs text-muted-foreground">Home: {driver.homeCity} ({homeMiles} mi)</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 rounded-lg bg-secondary px-3 py-2">
+          <Clock className="h-3.5 w-3.5 text-success" />
+          <span className="text-sm font-bold text-success tabular-nums">{driver.hosRemainingHours}h</span>
         </div>
       </div>
 
-      {/* AI Recommendation */}
-      <div className="rounded-2xl border border-primary/20 bg-primary/5 p-6">
-        <div className="flex items-start gap-4">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10">
-            <Sparkles className="h-5 w-5 text-primary" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <p className="text-sm font-semibold text-primary">AI Recommendation</p>
-              <Badge className="rounded-full bg-primary/10 text-primary border-0 text-[9px] font-semibold">
-                Stay on Road
-              </Badge>
+      {/* Two big tap-target cards */}
+      <div className="flex flex-col gap-4">
+        {/* STAY on the Road - Recommended */}
+        <button
+          onClick={() => setChoice("STAY")}
+          className={cn(
+            "w-full text-left rounded-2xl border-2 transition-colors p-5 min-h-[56px]",
+            choice === "STAY"
+              ? "border-success bg-success/10"
+              : recommended === "STAY" && !choice
+              ? "border-success/50 bg-success/5"
+              : "border-border bg-card active:bg-secondary"
+          )}
+        >
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className={cn(
+                "flex h-12 w-12 items-center justify-center rounded-xl",
+                recommended === "STAY" ? "bg-success/20" : "bg-secondary"
+              )}>
+                <Truck className={cn("h-6 w-6", recommended === "STAY" ? "text-success" : "text-muted-foreground")} />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-foreground">STAY</p>
+                <p className="text-xs text-muted-foreground">Keep earning on the road</p>
+              </div>
             </div>
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              There{"'"}s a <span className="font-semibold text-foreground">$945 load to St. Louis</span> picking up in 2 hours — that{"'"}s{" "}
-              <span className="font-semibold text-primary">$3.50/mi</span>, well above market rate.
-              Your home in Denver is 670 miles west, and the only homebound load pays $795 for 265 miles through Omaha.
-              Grab the St. Louis run, then catch a westbound load tomorrow morning.
+            {recommended === "STAY" && !choice && (
+              <span className="rounded-lg bg-success/20 text-success text-[10px] font-bold uppercase tracking-wider px-2.5 py-1">
+                Best move
+              </span>
+            )}
+            {choice === "STAY" && (
+              <CheckCircle2 className="h-6 w-6 text-success" />
+            )}
+          </div>
+
+          {/* Load preview */}
+          <div className="rounded-xl bg-background/50 border border-border p-4 mb-3">
+            <p className="text-sm font-bold text-foreground mb-2">
+              {stayLoad.origin} <span className="text-muted-foreground font-normal mx-1">{">"}</span> {stayLoad.destination}
+            </p>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-foreground font-bold tabular-nums">{stayLoad.miles} mi</span>
+              <span className="text-sm text-success font-bold tabular-nums">${(stayLoad.rateCents / 100).toLocaleString()}</span>
+              <span className="text-sm text-primary font-bold tabular-nums">${(stayLoad.rateCents / 100 / stayLoad.miles).toFixed(2)}/mi</span>
+              <span className="text-xs text-muted-foreground ml-auto">{stayLoad.pickupTime}</span>
+            </div>
+          </div>
+        </button>
+
+        {/* Drive HOME */}
+        <button
+          onClick={() => setChoice("HOME")}
+          className={cn(
+            "w-full text-left rounded-2xl border-2 transition-colors p-5 min-h-[56px]",
+            choice === "HOME"
+              ? "border-success bg-success/10"
+              : "border-border bg-card active:bg-secondary"
+          )}
+        >
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary">
+                <Home className="h-6 w-6 text-muted-foreground" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-foreground">HOME</p>
+                <p className="text-xs text-muted-foreground">Head toward {driver.homeCity}</p>
+              </div>
+            </div>
+            {choice === "HOME" && (
+              <CheckCircle2 className="h-6 w-6 text-success" />
+            )}
+          </div>
+
+          {/* Load preview */}
+          <div className="rounded-xl bg-background/50 border border-border p-4 mb-3">
+            <p className="text-sm font-bold text-foreground mb-2">
+              {homeLoad.origin} <span className="text-muted-foreground font-normal mx-1">{">"}</span> {homeLoad.destination}
+            </p>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-foreground font-bold tabular-nums">{homeLoad.miles} mi</span>
+              <span className="text-sm text-success font-bold tabular-nums">${(homeLoad.rateCents / 100).toLocaleString()}</span>
+              <span className="text-sm text-foreground font-bold tabular-nums">${(homeLoad.rateCents / 100 / homeLoad.miles).toFixed(2)}/mi</span>
+              <span className="text-xs text-muted-foreground ml-auto">{homeLoad.pickupTime}</span>
+            </div>
+          </div>
+        </button>
+      </div>
+
+      {/* AI reasoning - below the cards, plain conversational language */}
+      <div className="rounded-2xl bg-card border border-border p-5">
+        <p className="text-xs font-bold text-primary uppercase tracking-widest mb-3">Why STAY?</p>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          That St. Louis load is paying <span className="text-foreground font-bold">$3.50/mi</span> which is way above
+          the average $2.10 for this corridor. It picks up in 2 hours so timing works with your
+          {" "}<span className="text-foreground font-bold">{driver.hosRemainingHours}h</span> remaining.
+          The homebound option through Omaha only pays $3.00/mi and you{"'"}d still be 405 mi from Denver after.
+          Better to grab the money now and catch a westbound load tomorrow morning when rates are fresh.
+        </p>
+      </div>
+
+      {/* Confirmation after tap */}
+      {choice && (
+        <div className="rounded-2xl bg-success/10 border-2 border-success/30 p-5">
+          <div className="flex items-center gap-3 mb-3">
+            <CheckCircle2 className="h-6 w-6 text-success" />
+            <p className="text-base font-bold text-foreground">
+              {choice === "HOME"
+                ? `Heading home via ${homeLoad.destination}`
+                : `Staying on - ${stayLoad.origin} to ${stayLoad.destination}`}
             </p>
           </div>
-        </div>
-      </div>
-
-      {/* Two Options */}
-      <div className="grid gap-5 md:grid-cols-2">
-        {/* Drive Home */}
-        <button
-          className={cn(
-            "group text-left relative overflow-hidden rounded-2xl border transition-all duration-300",
-            choice === "HOME"
-              ? "border-primary/40 shadow-lg shadow-primary/5 -translate-y-0.5"
-              : "border-border hover:border-border/80 hover:shadow-md hover:shadow-primary/5 hover:-translate-y-0.5"
-          )}
-          onClick={() => setChoice("HOME")}
-        >
-          <div className="bg-card p-7 flex flex-col gap-5">
-            <div className="flex items-center justify-between">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary">
-                <Home className="h-5 w-5 text-muted-foreground" />
-              </div>
-              {choice === "HOME" && (
-                <CheckCircle2 className="h-5 w-5 text-primary" />
-              )}
-            </div>
-            <div>
-              <h3 className="font-serif text-xl font-medium text-foreground">Drive Home</h3>
-              <p className="text-xs text-muted-foreground mt-1">
-                Pick up a load heading toward {driver.homeCity}
-              </p>
-            </div>
-
-            <div className="rounded-xl bg-secondary/60 border border-border p-5">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <Navigation className="h-3.5 w-3.5 text-muted-foreground" />
-                  <span className="text-sm font-semibold text-foreground">
-                    {homeLoad.origin} {">"} {homeLoad.destination}
-                  </span>
-                </div>
-                <span className="font-serif text-xl font-medium text-foreground">
-                  ${(homeLoad.rateCents / 100).toLocaleString()}
-                </span>
-              </div>
-              <div className="grid grid-cols-3 gap-3">
-                {[
-                  { icon: ArrowRight, value: `${homeLoad.miles} mi`, label: "Distance" },
-                  { icon: DollarSign, value: `$${(homeLoad.rateCents / 100 / homeLoad.miles).toFixed(2)}/mi`, label: "Rate" },
-                  { icon: Clock, value: homeLoad.pickupTime, label: "Pickup" },
-                ].map((item) => (
-                  <div key={item.label} className="flex flex-col items-center gap-0.5">
-                    <item.icon className="h-3 w-3 text-muted-foreground" />
-                    <span className="text-xs font-semibold text-foreground">{item.value}</span>
-                    <span className="text-[9px] text-muted-foreground uppercase tracking-wider">{item.label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <MapPin className="h-3 w-3 shrink-0" />
-              {homeLoad.direction}
-            </div>
-          </div>
-        </button>
-
-        {/* Stay on Road */}
-        <button
-          className={cn(
-            "group text-left relative overflow-hidden rounded-2xl border transition-all duration-300",
-            choice === "STAY"
-              ? "border-primary/40 shadow-lg shadow-primary/5 -translate-y-0.5"
-              : !choice
-              ? "border-primary/20 shadow-md shadow-primary/5"
-              : "border-border hover:border-border/80 hover:shadow-md hover:shadow-primary/5 hover:-translate-y-0.5"
-          )}
-          onClick={() => setChoice("STAY")}
-        >
-          <div className="bg-card p-7 flex flex-col gap-5">
-            <div className="flex items-center justify-between">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                <Truck className="h-5 w-5 text-primary" />
-              </div>
-              <div className="flex items-center gap-2">
-                {!choice && (
-                  <Badge className="rounded-full bg-primary/10 text-primary border-0 text-[9px] font-semibold">
-                    Recommended
-                  </Badge>
-                )}
-                {choice === "STAY" && (
-                  <CheckCircle2 className="h-5 w-5 text-primary" />
-                )}
-              </div>
-            </div>
-            <div>
-              <h3 className="font-serif text-xl font-medium text-foreground">Stay on the Road</h3>
-              <p className="text-xs text-muted-foreground mt-1">
-                High-pay load available nearby
-              </p>
-            </div>
-
-            <div className="rounded-xl bg-primary/5 border border-primary/15 p-5">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <Navigation className="h-3.5 w-3.5 text-primary" />
-                  <span className="text-sm font-semibold text-foreground">
-                    {stayLoad.origin} {">"} {stayLoad.destination}
-                  </span>
-                </div>
-                <span className="font-serif text-xl font-medium text-primary">
-                  ${(stayLoad.rateCents / 100).toLocaleString()}
-                </span>
-              </div>
-              <div className="grid grid-cols-3 gap-3">
-                {[
-                  { icon: ArrowRight, value: `${stayLoad.miles} mi`, label: "Distance" },
-                  { icon: DollarSign, value: `$${(stayLoad.rateCents / 100 / stayLoad.miles).toFixed(2)}/mi`, label: "Rate", highlight: true },
-                  { icon: Clock, value: stayLoad.pickupTime, label: "Pickup" },
-                ].map((item) => (
-                  <div key={item.label} className="flex flex-col items-center gap-0.5">
-                    <item.icon className={cn("h-3 w-3", "highlight" in item && item.highlight ? "text-primary" : "text-muted-foreground")} />
-                    <span className={cn("text-xs font-semibold", "highlight" in item && item.highlight ? "text-primary" : "text-foreground")}>{item.value}</span>
-                    <span className="text-[9px] text-muted-foreground uppercase tracking-wider">{item.label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <TrendingUp className="h-3 w-3 text-primary shrink-0" />
-              <span><span className="font-semibold text-primary">$3.50/mi</span> — 40% above average corridor rate</span>
-            </div>
-          </div>
-        </button>
-      </div>
-
-      {/* Action Confirmation */}
-      {choice && (
-        <div className="flex flex-col items-center gap-4 rounded-2xl border border-success/20 bg-success/5 p-8">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success/10">
-            <CheckCircle2 className="h-6 w-6 text-success" />
-          </div>
-          <p className="text-center text-sm font-medium text-foreground">
+          <p className="text-sm text-muted-foreground mb-4">
             {choice === "HOME"
-              ? `Accepted the ${homeLoad.origin} > ${homeLoad.destination} load. Head to pickup.`
-              : `Accepted the ${stayLoad.origin} > ${stayLoad.destination} load. Pickup at 3:00 PM today.`}
+              ? `Pickup at ${homeLoad.pickupTime}. ${homeLoad.miles} mi, $${(homeLoad.rateCents / 100).toLocaleString()}.`
+              : `Pickup at ${stayLoad.pickupTime}. ${stayLoad.miles} mi, $${(stayLoad.rateCents / 100).toLocaleString()}.`}
           </p>
-          <Button variant="outline" size="sm" className="rounded-full" onClick={() => setChoice(null)}>
-            Change Decision
-          </Button>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setChoice(null)}
+              className="rounded-xl bg-secondary text-muted-foreground font-medium text-sm px-5 py-3 min-h-[44px] active:bg-border transition-colors"
+            >
+              Change Mind
+            </button>
+            <button className="flex-1 rounded-xl bg-success text-success-foreground font-bold text-sm px-5 py-3 min-h-[44px] flex items-center justify-center gap-2 active:scale-[0.98] transition-transform">
+              <ArrowRight className="h-4 w-4" />
+              Navigate to Pickup
+            </button>
+          </div>
         </div>
       )}
-
-      {/* All Nearby Loads */}
-      <div className="rounded-2xl border border-border bg-card">
-        <div className="p-7">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="font-serif text-xl font-medium text-foreground">All Nearby Loads</h2>
-              <p className="text-xs text-muted-foreground mt-1">{NEARBY_LOADS.length} loads within range of {currentLocation}</p>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              <span className="font-semibold text-foreground">{NEARBY_LOADS.length}</span> loads
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-3">
-            {NEARBY_LOADS.map((load) => (
-              <div
-                key={load.id}
-                className="group flex items-center justify-between rounded-xl border border-border bg-secondary/30 p-5 transition-all hover:bg-secondary/50 hover:shadow-sm"
-              >
-                <div className="flex flex-col gap-1">
-                  <span className="text-sm font-semibold text-foreground">
-                    {load.origin} {">"} {load.destination}
-                  </span>
-                  <span className="text-xs text-muted-foreground font-mono">
-                    {load.miles} mi &middot; {load.direction} &middot; {load.pickupTime}
-                  </span>
-                </div>
-                <div className="text-right">
-                  <p className="font-serif text-lg font-medium text-foreground">
-                    ${(load.rateCents / 100).toLocaleString()}
-                  </p>
-                  <p className="text-[10px] text-muted-foreground font-mono">
-                    ${(load.rateCents / 100 / load.miles).toFixed(2)}/mi
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
     </div>
   )
 }
