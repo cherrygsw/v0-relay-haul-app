@@ -7,28 +7,28 @@ const STATUS_CONFIG: Record<
 > = {
   OPEN: {
     label: "Open",
-    className: "bg-secondary text-muted-foreground",
+    className: "bg-muted-foreground/8 text-muted-foreground ring-1 ring-muted-foreground/15",
     dotClassName: "bg-muted-foreground",
   },
   ASSIGNED: {
     label: "Assigned",
-    className: "bg-primary/15 text-primary",
+    className: "bg-primary/8 text-primary ring-1 ring-primary/20",
     dotClassName: "bg-primary",
   },
   IN_TRANSIT: {
     label: "In Transit",
-    className: "bg-success/15 text-success",
-    dotClassName: "bg-success animate-pulse",
+    className: "bg-success/8 text-success ring-1 ring-success/20",
+    dotClassName: "bg-success",
   },
   COMPLETED: {
     label: "Completed",
-    className: "bg-success/15 text-success",
+    className: "bg-success/8 text-success ring-1 ring-success/20",
     dotClassName: "bg-success",
   },
   SEARCHING: {
     label: "Searching",
-    className: "bg-warning/15 text-warning",
-    dotClassName: "bg-warning animate-pulse",
+    className: "bg-warning/8 text-warning ring-1 ring-warning/20",
+    dotClassName: "bg-warning",
   },
 }
 
@@ -37,11 +37,16 @@ export function StatusBadge({ status }: { status: LegStatus }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium",
+        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold tracking-wide uppercase",
         config.className
       )}
     >
-      <span className={cn("h-1.5 w-1.5 rounded-full", config.dotClassName)} />
+      <span className="relative flex h-1.5 w-1.5">
+        {(status === "IN_TRANSIT" || status === "SEARCHING") && (
+          <span className={cn("absolute inline-flex h-full w-full animate-ping rounded-full opacity-75", config.dotClassName)} />
+        )}
+        <span className={cn("relative inline-flex h-1.5 w-1.5 rounded-full", config.dotClassName)} />
+      </span>
       {config.label}
     </span>
   )
