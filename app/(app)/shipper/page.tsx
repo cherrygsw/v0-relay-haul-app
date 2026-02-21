@@ -11,8 +11,7 @@ import {
   DollarSign,
   Route,
   Sparkles,
-  Weight,
-  Thermometer,
+  Scale,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -127,7 +126,7 @@ export default function ShipperPortalPage() {
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
               <span className="font-mono text-foreground font-semibold">{load.referenceNumber}</span>
               <span>{load.commodity}</span>
-              <span className="flex items-center gap-1"><Weight className="h-3 w-3" /> {(load.weight / 1000).toFixed(1)}k lbs</span>
+              <span className="flex items-center gap-1"><Scale className="h-3 w-3" /> {(load.weight / 1000).toFixed(1)}k lbs</span>
               <span>{load.equipment}</span>
               <span>Pickup: {load.pickupDate}</span>
               <span>Delivery: {load.deliveryDate}</span>
