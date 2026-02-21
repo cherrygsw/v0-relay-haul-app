@@ -7,7 +7,6 @@ import {
   CheckCircle2,
   Loader2,
   User,
-  Building,
   Sparkles,
   Eye,
   ExternalLink,
@@ -17,7 +16,7 @@ import { Badge } from "@/components/ui/badge"
 import { DEMO_CONTACTS, DEMO_LOAD } from "@/lib/mock-data"
 import { cn } from "@/lib/utils"
 
-const gapLeg = DEMO_LOAD.legs[2] // The SEARCHING leg
+const gapLeg = DEMO_LOAD.legs[2]
 
 export default function EmailOutreachPage() {
   const [sentEmails, setSentEmails] = useState<Set<string>>(new Set())
@@ -34,7 +33,7 @@ export default function EmailOutreachPage() {
 
   const generateEmail = (contact: typeof DEMO_CONTACTS[0]) => {
     return {
-      subject: `Quick coverage need: ${gapLeg.origin} → ${gapLeg.destination} (${gapLeg.miles} mi)`,
+      subject: `Quick coverage need: ${gapLeg.origin} > ${gapLeg.destination} (${gapLeg.miles} mi)`,
       body: `Hi ${contact.name},
 
 Hope you're doing well. I have a relay leg that needs coverage — ${gapLeg.origin} to ${gapLeg.destination}, ${gapLeg.miles} miles, picking up ${gapLeg.estimatedPickup}. Paying $${(gapLeg.rateCents / 100).toLocaleString()} ($${(gapLeg.rateCents / 100 / gapLeg.miles).toFixed(2)}/mi).
@@ -45,7 +44,7 @@ Can you check availability? Happy to discuss details.
 
 Best,
 Marcus Thompson
-Relay Haul Driver Network`,
+FreightBite Driver Network`,
     }
   }
 
@@ -53,14 +52,17 @@ Relay Haul Driver Network`,
   const previewEmail = generateEmail(previewContact)
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-10">
       {/* Header */}
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-1">
+        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
+          Network Outreach
+        </p>
         <div className="flex items-center gap-3">
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">
+          <h1 className="font-serif text-3xl font-medium text-foreground lg:text-4xl">
             Email Outreach
           </h1>
-          <Badge className="bg-warning/8 text-warning ring-1 ring-warning/20 border-0 text-[10px] font-bold uppercase tracking-wider">
+          <Badge className="rounded-full bg-warning/10 text-warning border-0 text-[10px] font-semibold">
             Gap on Leg 3
           </Badge>
         </div>
@@ -70,44 +72,40 @@ Relay Haul Driver Network`,
       </div>
 
       {/* Gap Info */}
-      <div className="relative overflow-hidden rounded-2xl border border-warning/20 bg-warning/5 p-5">
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-warning/50 to-transparent" />
+      <div className="rounded-2xl border border-warning/20 bg-warning/5 p-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-warning/10 ring-1 ring-warning/20">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-warning/10">
               <Mail className="h-5 w-5 text-warning" />
             </div>
             <div>
-              <p className="text-sm font-bold text-foreground">
-                Relay Gap: {gapLeg.origin} → {gapLeg.destination}
+              <p className="text-sm font-semibold text-foreground">
+                Relay Gap: {gapLeg.origin} {">"} {gapLeg.destination}
               </p>
               <p className="text-xs text-muted-foreground">
                 {gapLeg.miles} mi &middot; ${(gapLeg.rateCents / 100).toLocaleString()} &middot; Pickup {gapLeg.estimatedPickup}
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-warning">
-              {sentEmails.size}/{DEMO_CONTACTS.length} sent
-            </span>
-          </div>
+          <p className="text-xs font-medium text-warning">
+            {sentEmails.size}/{DEMO_CONTACTS.length} sent
+          </p>
         </div>
       </div>
 
       {/* Main Grid */}
       <div className="grid gap-6 lg:grid-cols-[380px_1fr]">
         {/* Contacts List */}
-        <div className="relative overflow-hidden rounded-2xl border border-border/40 bg-card/60">
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border/60 to-transparent" />
-          <div className="p-5">
+        <div className="rounded-2xl border border-border bg-card">
+          <div className="p-6">
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-sm font-bold text-foreground">Broker Contacts</h2>
-              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.15em]">
+              <h2 className="text-sm font-semibold text-foreground">Broker Contacts</h2>
+              <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-[0.15em]">
                 {DEMO_CONTACTS.length} contacts
               </span>
             </div>
 
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-3">
               {DEMO_CONTACTS.map((contact) => {
                 const isSent = sentEmails.has(contact.id)
                 const isSending = sendingId === contact.id
@@ -118,19 +116,19 @@ Relay Haul Driver Network`,
                     key={contact.id}
                     onClick={() => setPreviewId(contact.id)}
                     className={cn(
-                      "group cursor-pointer rounded-xl border p-4 transition-all duration-200",
+                      "group cursor-pointer rounded-xl border p-5 transition-all duration-200",
                       isPreview
-                        ? "border-primary/30 bg-primary/5 glow-sm-primary"
-                        : "border-border/30 bg-secondary/20 hover:border-border/50"
+                        ? "border-primary/30 bg-primary/5 shadow-sm"
+                        : "border-border bg-secondary/30 hover:bg-secondary/50"
                     )}
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-3">
                         <div className={cn(
-                          "flex h-9 w-9 items-center justify-center rounded-xl text-xs font-bold ring-1",
+                          "flex h-10 w-10 items-center justify-center rounded-full text-xs font-semibold",
                           isSent
-                            ? "bg-success/10 text-success ring-success/20"
-                            : "bg-primary/10 text-primary ring-primary/20"
+                            ? "bg-success/10 text-success"
+                            : "bg-secondary text-foreground"
                         )}>
                           {isSent ? <CheckCircle2 className="h-4 w-4" /> : contact.name.split(" ").map(n => n[0]).join("")}
                         </div>
@@ -140,7 +138,7 @@ Relay Haul Driver Network`,
                         </div>
                       </div>
                       {isSent && (
-                        <Badge className="bg-success/8 text-success ring-1 ring-success/20 border-0 text-[9px]">
+                        <Badge className="rounded-full bg-success/10 text-success border-0 text-[9px]">
                           Sent
                         </Badge>
                       )}
@@ -157,7 +155,7 @@ Relay Haul Driver Network`,
                       {!isSent ? (
                         <Button
                           size="sm"
-                          className="h-8 gap-1.5 rounded-lg text-xs flex-1"
+                          className="h-8 gap-1.5 rounded-full text-xs flex-1 bg-foreground text-background hover:bg-foreground/90"
                           onClick={(e) => {
                             e.stopPropagation()
                             handleSend(contact.id)
@@ -185,7 +183,7 @@ Relay Haul Driver Network`,
                       <Button
                         size="sm"
                         variant="outline"
-                        className="h-8 rounded-lg"
+                        className="h-8 rounded-full"
                         onClick={(e) => {
                           e.stopPropagation()
                           setPreviewId(contact.id)
@@ -202,41 +200,40 @@ Relay Haul Driver Network`,
         </div>
 
         {/* Email Preview */}
-        <div className="relative overflow-hidden rounded-2xl border border-border/40 bg-card/60">
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-          <div className="p-6">
+        <div className="rounded-2xl border border-border bg-card">
+          <div className="p-7">
             <div className="flex items-center gap-3 mb-6">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/20">
-                <Sparkles className="h-4 w-4 text-primary" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                <Sparkles className="h-4.5 w-4.5 text-primary" />
               </div>
               <div>
-                <h2 className="text-sm font-bold text-foreground">AI-Generated Email</h2>
+                <h2 className="text-sm font-semibold text-foreground">AI-Generated Email</h2>
                 <p className="text-[10px] text-muted-foreground">Personalized using past load history</p>
               </div>
             </div>
 
             {/* Email Header */}
-            <div className="rounded-xl border border-border/30 bg-secondary/20 p-5 mb-4">
+            <div className="rounded-xl border border-border bg-secondary/30 p-5 mb-4">
               <div className="flex flex-col gap-3">
                 <div className="flex items-center gap-2 text-xs">
-                  <span className="font-bold text-muted-foreground uppercase tracking-[0.15em] w-12">To</span>
-                  <span className="text-foreground font-medium">{previewContact.name} &lt;{previewContact.email}&gt;</span>
+                  <span className="font-semibold text-muted-foreground uppercase tracking-[0.15em] w-12">To</span>
+                  <span className="text-foreground">{previewContact.name} &lt;{previewContact.email}&gt;</span>
                 </div>
-                <div className="h-px bg-border/30" />
+                <div className="h-px bg-border" />
                 <div className="flex items-center gap-2 text-xs">
-                  <span className="font-bold text-muted-foreground uppercase tracking-[0.15em] w-12">From</span>
-                  <span className="text-foreground font-medium">Marcus Thompson &lt;marcus.t@relayhaul.com&gt;</span>
+                  <span className="font-semibold text-muted-foreground uppercase tracking-[0.15em] w-12">From</span>
+                  <span className="text-foreground">Marcus Thompson &lt;marcus.t@freightbite.com&gt;</span>
                 </div>
-                <div className="h-px bg-border/30" />
+                <div className="h-px bg-border" />
                 <div className="flex items-center gap-2 text-xs">
-                  <span className="font-bold text-muted-foreground uppercase tracking-[0.15em] w-12">Subj</span>
-                  <span className="text-foreground font-semibold">{previewEmail.subject}</span>
+                  <span className="font-semibold text-muted-foreground uppercase tracking-[0.15em] w-12">Subj</span>
+                  <span className="text-foreground font-medium">{previewEmail.subject}</span>
                 </div>
               </div>
             </div>
 
             {/* Email Body */}
-            <div className="rounded-xl border border-border/30 bg-secondary/10 p-6">
+            <div className="rounded-xl border border-border bg-secondary/20 p-6">
               <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-foreground/80">
                 {previewEmail.body}
               </pre>
@@ -247,7 +244,7 @@ Relay Haul Driver Network`,
               <div className="flex items-start gap-3">
                 <Sparkles className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                 <div className="text-xs text-muted-foreground leading-relaxed">
-                  <span className="font-bold text-primary">AI context:</span>{" "}
+                  <span className="font-semibold text-primary">AI context:</span>{" "}
                   This email references your work with {previewContact.company} on{" "}
                   {previewContact.lastLoad} in {previewContact.lastWorkedDate}.
                   The tone matches your previous successful email patterns.
@@ -259,7 +256,7 @@ Relay Haul Driver Network`,
             <div className="mt-6 flex items-center gap-3">
               {!sentEmails.has(previewContact.id) ? (
                 <Button
-                  className="gap-2 rounded-xl glow-primary"
+                  className="gap-2 rounded-full bg-foreground text-background hover:bg-foreground/90"
                   onClick={() => handleSend(previewContact.id)}
                   disabled={sendingId === previewContact.id}
                 >
@@ -276,12 +273,12 @@ Relay Haul Driver Network`,
                   )}
                 </Button>
               ) : (
-                <div className="flex items-center gap-2 text-sm text-success font-semibold">
+                <div className="flex items-center gap-2 text-sm text-success font-medium">
                   <CheckCircle2 className="h-4 w-4" />
                   Sent to {previewContact.name}
                 </div>
               )}
-              <Button variant="outline" size="sm" className="gap-1.5 rounded-xl">
+              <Button variant="outline" size="sm" className="gap-1.5 rounded-full">
                 <ExternalLink className="h-3 w-3" />
                 Edit Draft
               </Button>

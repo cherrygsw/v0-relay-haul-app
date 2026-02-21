@@ -8,7 +8,7 @@ import {
   Clock,
   Navigation,
   CheckCircle2,
-  Zap,
+  Sparkles,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { StatusBadge } from "@/components/status-badge"
@@ -31,33 +31,24 @@ export function LegCard({ leg, showAccept = true }: { leg: Leg; showAccept?: boo
       className={cn(
         "group relative overflow-hidden rounded-2xl border transition-all duration-300",
         accepted
-          ? "border-success/30 glow-success"
-          : "border-border/60 hover:border-primary/30 hover:glow-sm-primary",
-        "bg-card"
+          ? "border-success/40 bg-success/5"
+          : "border-border bg-card hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-0.5",
       )}
     >
-      {/* Subtle top accent line */}
-      <div className={cn(
-        "absolute top-0 left-0 right-0 h-px",
-        accepted
-          ? "bg-gradient-to-r from-transparent via-success/60 to-transparent"
-          : "bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
-      )} />
-
-      <div className="p-5 flex flex-col gap-4">
+      <div className="p-6 flex flex-col gap-5">
         {/* Header */}
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
-            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10 text-xs font-bold text-primary ring-1 ring-primary/20">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary text-sm font-serif font-semibold text-foreground">
               {leg.sequence}
             </span>
             <div>
-              <span className="text-[11px] font-mono font-medium text-muted-foreground tracking-wider">
+              <span className="text-xs font-mono text-muted-foreground tracking-wide">
                 {leg.loadId}
               </span>
               {isHighPay && (
-                <span className="ml-2 inline-flex items-center gap-1 text-[10px] font-bold text-primary">
-                  <Zap className="h-2.5 w-2.5" />
+                <span className="ml-2 inline-flex items-center gap-1 text-[10px] font-semibold text-primary">
+                  <Sparkles className="h-2.5 w-2.5" />
                   HIGH PAY
                 </span>
               )}
@@ -67,27 +58,27 @@ export function LegCard({ leg, showAccept = true }: { leg: Leg; showAccept?: boo
         </div>
 
         {/* Route */}
-        <div className="flex items-center gap-4">
-          <div className="flex flex-1 flex-col gap-1.5">
-            <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-              <div className="flex h-5 w-5 items-center justify-center rounded-md bg-primary/10">
+        <div className="flex items-center gap-6">
+          <div className="flex flex-1 flex-col gap-2">
+            <div className="flex items-center gap-2.5 text-sm font-semibold text-foreground">
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10">
                 <MapPin className="h-3 w-3 text-primary" />
               </div>
               {leg.origin}
             </div>
-            <div className="ml-2.5 flex items-center gap-2">
-              <div className="h-5 border-l border-dashed border-primary/20" />
+            <div className="ml-3 flex items-center gap-2.5">
+              <div className="h-6 border-l border-dashed border-border" />
               <span className="text-[10px] text-muted-foreground font-mono">{leg.miles} mi</span>
             </div>
-            <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-              <div className="flex h-5 w-5 items-center justify-center rounded-md bg-success/10">
+            <div className="flex items-center gap-2.5 text-sm font-semibold text-foreground">
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-success/10">
                 <Navigation className="h-3 w-3 text-success" />
               </div>
               {leg.destination}
             </div>
           </div>
           <div className="text-right">
-            <p className="text-3xl font-bold tracking-tight text-foreground">{rate}</p>
+            <p className="font-serif text-3xl font-medium text-foreground">{rate}</p>
             <p className="text-xs text-muted-foreground font-mono mt-0.5">
               ${ratePerMile}/mi
             </p>
@@ -95,13 +86,13 @@ export function LegCard({ leg, showAccept = true }: { leg: Leg; showAccept?: boo
         </div>
 
         {/* Details Grid */}
-        <div className="grid grid-cols-3 gap-px rounded-xl overflow-hidden bg-border/30">
+        <div className="grid grid-cols-3 gap-3">
           {[
             { icon: ArrowRight, value: `${leg.miles} mi`, label: "Distance" },
             { icon: Clock, value: leg.estimatedPickup, label: "Pickup" },
             { icon: DollarSign, value: leg.estimatedDelivery, label: "Delivery" },
           ].map((item) => (
-            <div key={item.label} className="flex flex-col items-center gap-1 bg-secondary/50 py-3">
+            <div key={item.label} className="flex flex-col items-center gap-1 rounded-xl bg-secondary/60 py-3">
               <item.icon className="h-3.5 w-3.5 text-muted-foreground" />
               <span className="text-sm font-semibold text-foreground">{item.value}</span>
               <span className="text-[10px] text-muted-foreground uppercase tracking-wider">{item.label}</span>
@@ -110,7 +101,7 @@ export function LegCard({ leg, showAccept = true }: { leg: Leg; showAccept?: boo
         </div>
 
         {/* Handoff */}
-        <div className="flex items-center gap-2 rounded-lg bg-secondary/40 px-3 py-2 ring-1 ring-border/30">
+        <div className="flex items-center gap-2.5 rounded-xl bg-secondary/40 px-4 py-2.5 border border-border/60">
           <MapPin className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
           <span className="text-xs text-muted-foreground">
             Handoff at{" "}
@@ -124,7 +115,7 @@ export function LegCard({ leg, showAccept = true }: { leg: Leg; showAccept?: boo
         {showAccept && !accepted && leg.status === "OPEN" && (
           <Button
             size="lg"
-            className="w-full gap-2 rounded-xl h-12 text-sm font-semibold"
+            className="w-full gap-2 rounded-full h-12 text-sm font-medium bg-foreground text-background hover:bg-foreground/90"
             onClick={() => setAccepted(true)}
           >
             <CheckCircle2 className="h-4 w-4" />
@@ -132,9 +123,9 @@ export function LegCard({ leg, showAccept = true }: { leg: Leg; showAccept?: boo
           </Button>
         )}
         {accepted && (
-          <div className="flex items-center justify-center gap-2 rounded-xl bg-success/8 py-3 text-sm font-semibold text-success ring-1 ring-success/20">
+          <div className="flex items-center justify-center gap-2 rounded-full bg-success/10 py-3 text-sm font-semibold text-success border border-success/20">
             <CheckCircle2 className="h-4 w-4" />
-            Accepted — Head to {leg.handoffPoint}
+            Accepted
           </div>
         )}
       </div>

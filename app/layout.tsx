@@ -1,16 +1,20 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, JetBrains_Mono } from 'next/font/google'
+import { Inter, Playfair_Display, JetBrains_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 const _inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
+const _playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+})
 const _jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains-mono",
 })
 
 export const metadata: Metadata = {
-  title: 'Relay Haul - AI-Powered Freight Relay Platform',
+  title: 'FreightBite - AI-Powered Freight Relay Platform',
   description: 'AI dispatcher breaks loads into HOS-legal relay legs, matches drivers, and connects your network.',
   icons: {
     icon: [
@@ -32,7 +36,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#1a1a2e',
+  themeColor: '#f5f0ea',
 }
 
 export default function RootLayout({
