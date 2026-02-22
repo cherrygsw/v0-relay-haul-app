@@ -10,6 +10,7 @@ import {
   Phone,
 } from "lucide-react"
 import { DEMO_CONTACTS, DEMO_LOAD } from "@/lib/mock-data"
+import { MasonryGrid, MasonryItem } from "@/components/masonry-grid"
 import { cn } from "@/lib/utils"
 
 const gapLeg = DEMO_LOAD.legs[2] // North Platte > St. George, SEARCHING

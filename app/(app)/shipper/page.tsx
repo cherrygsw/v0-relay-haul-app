@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { RouteVisualizer } from "@/components/route-visualizer"
 import { RelayMap } from "@/components/relay-map"
+import { MasonryGrid, MasonryItem } from "@/components/masonry-grid"
 import { DEMO_LOAD } from "@/lib/mock-data"
 
 export default function ShipperPortalPage() {
@@ -140,7 +141,7 @@ export default function ShipperPortalPage() {
           </div>
 
           {/* Summary Stats */}
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          <MasonryGrid columns={{ sm: 2, md: 3, lg: 5 }} gap="1rem">
             {[
               { icon: Route, value: load.miles.toLocaleString(), unit: "mi", label: "Total Miles" },
               { icon: Truck, value: String(load.legs.length), unit: "legs", label: "Relay Legs" },
@@ -148,25 +149,24 @@ export default function ShipperPortalPage() {
               { icon: DollarSign, value: `$${(lineHaulOnly / 100).toLocaleString()}`, unit: "", label: "Line Haul" },
               { icon: DollarSign, value: `$${(totalRate / 100).toLocaleString()}`, unit: "", label: "All-In (w/ FSC)" },
             ].map((stat) => (
-              <div
-                key={stat.label}
-                className="rounded-2xl border border-border bg-card p-5"
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary">
-                    <stat.icon className="h-4 w-4 text-primary" />
+              <MasonryItem key={stat.label}>
+                <div className="rounded-2xl border border-border bg-card p-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary">
+                      <stat.icon className="h-4 w-4 text-primary" />
+                    </div>
+                    <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-[0.15em]">
+                      {stat.label}
+                    </span>
                   </div>
-                  <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-[0.15em]">
-                    {stat.label}
-                  </span>
+                  <div className="flex items-baseline gap-1">
+                    <span className="font-serif text-2xl font-medium text-foreground">{stat.value}</span>
+                    {stat.unit && <span className="text-sm text-muted-foreground">{stat.unit}</span>}
+                  </div>
                 </div>
-                <div className="flex items-baseline gap-1">
-                  <span className="font-serif text-2xl font-medium text-foreground">{stat.value}</span>
-                  {stat.unit && <span className="text-sm text-muted-foreground">{stat.unit}</span>}
-                </div>
-              </div>
+              </MasonryItem>
             ))}
-          </div>
+          </MasonryGrid>
 
           {/* Relay Chain */}
           <div className="grid gap-6 lg:grid-cols-[1fr_380px]">

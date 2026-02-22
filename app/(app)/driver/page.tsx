@@ -4,6 +4,7 @@ import { useState } from "react"
 import { SlidersHorizontal, Wifi, WifiOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { LegCard } from "@/components/leg-card"
+import { MasonryGrid, MasonryItem } from "@/components/masonry-grid"
 import { DriverMap } from "@/components/driver-map"
 import { AVAILABLE_LEGS, DEMO_DRIVERS, HOS_RULES, SHORT_HAUL_TRIPS } from "@/lib/mock-data"
 
@@ -145,12 +146,14 @@ export default function DriverDashboardPage() {
         </span>
       </div>
 
-      {/* Legs list */}
-      <div className="flex flex-col gap-4">
+      {/* Legs list -- masonry grid */}
+      <MasonryGrid columns={{ sm: 1, md: 2 }} gap="1rem">
         {filteredLegs.map((leg) => (
-          <LegCard key={leg.id} leg={leg} />
+          <MasonryItem key={leg.id}>
+            <LegCard leg={leg} />
+          </MasonryItem>
         ))}
-      </div>
+      </MasonryGrid>
 
       {filteredLegs.length === 0 && (
         <div className="flex flex-col items-center justify-center rounded-2xl border border-border bg-card py-16 gap-4">

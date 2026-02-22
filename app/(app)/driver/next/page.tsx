@@ -11,6 +11,7 @@ import {
   Package,
 } from "lucide-react"
 import { DEMO_DRIVERS, NEARBY_LOADS, HOS_RULES } from "@/lib/mock-data"
+import { MasonryGrid, MasonryItem } from "@/components/masonry-grid"
 import { cn } from "@/lib/utils"
 
 const driver = DEMO_DRIVERS[1] // Sandra, in Iowa City
@@ -57,9 +58,10 @@ export default function WhatsNextPage() {
         </div>
       </div>
 
-      {/* Two big tap-target cards */}
-      <div className="flex flex-col gap-4">
+      {/* Two big tap-target cards -- masonry */}
+      <MasonryGrid columns={{ sm: 1, md: 2 }} gap="1rem">
         {/* STAY on the Road */}
+        <MasonryItem>
         <button
           onClick={() => setChoice("STAY")}
           className={cn(

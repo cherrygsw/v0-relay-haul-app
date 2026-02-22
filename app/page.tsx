@@ -14,6 +14,7 @@ import {
   CheckCircle2,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { MasonryGrid, MasonryItem } from "@/components/masonry-grid"
 
 const PROCESS_STEPS = [
   {
@@ -207,30 +208,24 @@ export default function HomePage() {
           </h2>
         </div>
 
-        <div className="grid gap-0 md:grid-cols-2 lg:grid-cols-4">
-          {PROCESS_STEPS.map((step, i) => (
-            <div key={step.number} className="group relative flex flex-col px-8 py-10">
-              {/* Vertical divider between cards on large screens */}
-              {i > 0 && (
-                <div className="absolute left-0 top-10 bottom-10 hidden w-px bg-border lg:block" />
-              )}
-              {/* Horizontal divider on small screens */}
-              {i > 0 && (
-                <div className="absolute left-8 right-8 top-0 h-px bg-border lg:hidden" />
-              )}
-              <span className="mb-6 font-serif text-5xl font-medium text-border group-hover:text-primary/30 transition-colors duration-500">
-                {step.number}
-              </span>
-              <step.icon className="mb-4 h-5 w-5 text-primary" />
-              <h3 className="mb-3 text-lg font-semibold text-foreground">
-                {step.title}
-              </h3>
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                {step.description}
-              </p>
-            </div>
+        <MasonryGrid columns={{ sm: 1, md: 2, lg: 4 }} gap="1.5rem">
+          {PROCESS_STEPS.map((step) => (
+            <MasonryItem key={step.number}>
+              <div className="group flex flex-col rounded-2xl border border-border bg-card p-8 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-0.5">
+                <span className="mb-6 font-serif text-5xl font-medium text-border group-hover:text-primary/30 transition-colors duration-500">
+                  {step.number}
+                </span>
+                <step.icon className="mb-4 h-5 w-5 text-primary" />
+                <h3 className="mb-3 text-lg font-semibold text-foreground">
+                  {step.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  {step.description}
+                </p>
+              </div>
+            </MasonryItem>
           ))}
-        </div>
+        </MasonryGrid>
       </section>
 
       {/* Divider */}
@@ -264,24 +259,23 @@ export default function HomePage() {
             </Button>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2">
+          <MasonryGrid columns={{ sm: 1, md: 2 }} gap="1.5rem">
             {FEATURES_GRID.map((feature) => (
-              <div
-                key={feature.title}
-                className="group rounded-2xl border border-border bg-card p-7 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-0.5"
-              >
-                <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
-                  <feature.icon className="h-4.5 w-4.5 text-primary" />
+              <MasonryItem key={feature.title}>
+                <div className="group rounded-2xl border border-border bg-card p-7 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-0.5">
+                  <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
+                    <feature.icon className="h-4.5 w-4.5 text-primary" />
+                  </div>
+                  <h3 className="mb-2 text-base font-semibold text-foreground">
+                    {feature.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">
+                    {feature.description}
+                  </p>
                 </div>
-                <h3 className="mb-2 text-base font-semibold text-foreground">
-                  {feature.title}
-                </h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  {feature.description}
-                </p>
-              </div>
+              </MasonryItem>
             ))}
-          </div>
+          </MasonryGrid>
         </div>
       </section>
 
@@ -297,37 +291,36 @@ export default function HomePage() {
             </h2>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-3">
+          <MasonryGrid columns={{ sm: 1, md: 2, lg: 3 }} gap="1.5rem">
             {TESTIMONIALS.map((t, i) => (
-              <div
-                key={i}
-                className="flex flex-col justify-between rounded-2xl border border-border bg-card p-8 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5"
-              >
-                {/* Quote mark */}
-                <div>
-                  <span className="font-serif text-5xl leading-none text-primary/30" aria-hidden="true">
-                    {'\u201C'}
-                  </span>
-                  <p className="mt-2 text-base leading-relaxed text-foreground">
-                    {t.quote}
-                  </p>
-                </div>
-                <div className="mt-8 flex items-center gap-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-xs font-semibold text-foreground">
-                    {t.name.split(" ").map((n) => n[0]).join("")}
-                  </div>
+              <MasonryItem key={i}>
+                <div className="flex flex-col justify-between rounded-2xl border border-border bg-card p-8 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
+                  {/* Quote mark */}
                   <div>
-                    <p className="text-sm font-semibold text-foreground">
-                      {t.name}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {t.role} &middot; {t.location}
+                    <span className="font-serif text-5xl leading-none text-primary/30" aria-hidden="true">
+                      {'\u201C'}
+                    </span>
+                    <p className="mt-2 text-base leading-relaxed text-foreground">
+                      {t.quote}
                     </p>
                   </div>
+                  <div className="mt-8 flex items-center gap-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-xs font-semibold text-foreground">
+                      {t.name.split(" ").map((n) => n[0]).join("")}
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">
+                        {t.name}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {t.role} &middot; {t.location}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </MasonryItem>
             ))}
-          </div>
+          </MasonryGrid>
         </div>
       </section>
 
