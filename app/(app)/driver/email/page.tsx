@@ -93,37 +93,38 @@ MC-1042871 | FreightBite Driver Network
         <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
           Your Contacts ({sentEmails.size}/{DEMO_CONTACTS.length} sent)
         </p>
-        <div className="flex gap-3 overflow-x-auto pb-1 -mx-5 px-5">
+        <MasonryGrid columns={{ sm: 2, md: 3 }} gap="0.75rem">
           {DEMO_CONTACTS.map((contact) => {
             const sent = sentEmails.has(contact.id)
             const isActive = activeContact.id === contact.id
 
             return (
-              <button
-                key={contact.id}
-                onClick={() => setActiveContact(contact)}
-                className={cn(
-                  "shrink-0 rounded-2xl border-2 p-4 min-w-[200px] text-left transition-colors min-h-[56px]",
-                  isActive
-                    ? "border-primary bg-primary/10"
-                    : "border-border bg-card active:bg-secondary"
-                )}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <p className="text-sm font-bold text-foreground">{contact.name.split(" ")[0]}</p>
-                  {sent && <CheckCircle2 className="h-4 w-4 text-success" />}
-                </div>
-                <p className="text-[10px] text-muted-foreground">{contact.company}</p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">
-                  {contact.totalLoads} loads &middot; avg ${contact.avgRatePerMile.toFixed(2)}/mi
-                </p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">
-                  {contact.paymentTerms}
-                </p>
-              </button>
+              <MasonryItem key={contact.id}>
+                <button
+                  onClick={() => setActiveContact(contact)}
+                  className={cn(
+                    "w-full rounded-2xl border-2 p-4 text-left transition-colors min-h-[56px]",
+                    isActive
+                      ? "border-primary bg-primary/10"
+                      : "border-border bg-card active:bg-secondary"
+                  )}
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-sm font-bold text-foreground">{contact.name.split(" ")[0]}</p>
+                    {sent && <CheckCircle2 className="h-4 w-4 text-success" />}
+                  </div>
+                  <p className="text-[10px] text-muted-foreground">{contact.company}</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">
+                    {contact.totalLoads} loads &middot; avg ${contact.avgRatePerMile.toFixed(2)}/mi
+                  </p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">
+                    {contact.paymentTerms}
+                  </p>
+                </button>
+              </MasonryItem>
             )
           })}
-        </div>
+        </MasonryGrid>
       </div>
 
       {/* Broker context */}

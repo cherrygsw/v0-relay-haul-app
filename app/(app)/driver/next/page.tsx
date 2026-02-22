@@ -117,8 +117,10 @@ export default function WhatsNextPage() {
             </div>
           </div>
         </button>
+        </MasonryItem>
 
         {/* Drive HOME */}
+        <MasonryItem>
         <button
           onClick={() => setChoice("HOME")}
           className={cn(
@@ -164,7 +166,8 @@ export default function WhatsNextPage() {
             </div>
           </div>
         </button>
-      </div>
+        </MasonryItem>
+      </MasonryGrid>
 
       {/* AI reasoning */}
       <div className="rounded-2xl bg-card border border-border p-5">
