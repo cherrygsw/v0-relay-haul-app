@@ -5,7 +5,7 @@ import { SlidersHorizontal, Wifi, WifiOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { LegCard } from "@/components/leg-card"
 import { DriverMap } from "@/components/driver-map"
-import { AVAILABLE_LEGS, DEMO_DRIVERS, HOS_RULES } from "@/lib/mock-data"
+import { AVAILABLE_LEGS, DEMO_DRIVERS, HOS_RULES, SHORT_HAUL_TRIPS } from "@/lib/mock-data"
 
 const driver = DEMO_DRIVERS[0]
 
@@ -112,7 +112,7 @@ export default function DriverDashboardPage() {
             {filteredLegs.length} loads on board
           </span>
         </div>
-        <DriverMap legs={filteredLegs} driver={driver} />
+        <DriverMap legs={filteredLegs} shortHauls={SHORT_HAUL_TRIPS} driver={driver} />
       </div>
 
       {/* Sync status (offline-tolerant) */}
