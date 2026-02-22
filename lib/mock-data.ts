@@ -82,6 +82,23 @@ export interface BrokerContact {
   preferredLanes: string[]
 }
 
+export interface ShortHaul {
+  id: string
+  origin: string
+  originState: string
+  destination: string
+  destinationState: string
+  miles: number
+  pay: number
+  duration: string         // e.g. "1.5 hrs"
+  type: "Shuttle" | "Drayage" | "Yard Move" | "Dock Transfer" | "Local Delivery"
+  company: string
+  commodity: string
+  pickupTime: string
+  equipment: string
+  notes: string
+}
+
 export interface NearbyLoad {
   id: string
   origin: string
@@ -561,6 +578,107 @@ export const NEARBY_LOADS: NearbyLoad[] = [
   },
 ]
 
+// Ultra-short trips for downtime -- warehouse shuttles, drayage, local moves
+// All within ~100mi of Iowa City (Cedar Rapids, Quad Cities, Waterloo corridor)
+export const SHORT_HAUL_TRIPS: ShortHaul[] = [
+  {
+    id: "sh-1",
+    origin: "Iowa City, IA",
+    originState: "IA",
+    destination: "Cedar Rapids, IA",
+    destinationState: "IA",
+    miles: 28,
+    pay: 175,
+    duration: "45 min",
+    type: "Shuttle",
+    company: "Procter & Gamble Iowa City Plant",
+    commodity: "Household Products (Palletized)",
+    pickupTime: "Today 4:00 PM",
+    equipment: "Dry Van 53ft",
+    notes: "Dock-to-dock, no-touch. Live load/unload ~20 min each.",
+  },
+  {
+    id: "sh-2",
+    origin: "Davenport, IA",
+    originState: "IA",
+    destination: "Muscatine, IA",
+    destinationState: "IA",
+    miles: 32,
+    pay: 195,
+    duration: "50 min",
+    type: "Drayage",
+    company: "HNI Corporation",
+    commodity: "Office Furniture Components",
+    pickupTime: "Today 5:30 PM",
+    equipment: "Dry Van 53ft",
+    notes: "Container pull from rail yard to warehouse. Chassis provided.",
+  },
+  {
+    id: "sh-3",
+    origin: "Cedar Rapids, IA",
+    originState: "IA",
+    destination: "Waterloo, IA",
+    destinationState: "IA",
+    miles: 63,
+    pay: 280,
+    duration: "1.5 hrs",
+    type: "Local Delivery",
+    company: "Quaker Oats (PepsiCo)",
+    commodity: "Packaged Oats & Cereal",
+    pickupTime: "Tomorrow 6:00 AM",
+    equipment: "Dry Van 53ft",
+    notes: "Pickup at Quaker plant, deliver to Hy-Vee DC. Appointment required.",
+  },
+  {
+    id: "sh-4",
+    origin: "Coralville, IA",
+    originState: "IA",
+    destination: "Walcott, IA",
+    destinationState: "IA",
+    miles: 55,
+    pay: 240,
+    duration: "1 hr",
+    type: "Dock Transfer",
+    company: "CRST International",
+    commodity: "Mixed LTL Freight (Cross-dock)",
+    pickupTime: "Today 6:00 PM",
+    equipment: "Dry Van 53ft",
+    notes: "Cross-dock transfer. Seal intact -- do not break seal.",
+  },
+  {
+    id: "sh-5",
+    origin: "Iowa City, IA",
+    originState: "IA",
+    destination: "Burlington, IA",
+    destinationState: "IA",
+    miles: 72,
+    pay: 310,
+    duration: "1.5 hrs",
+    type: "Local Delivery",
+    company: "University of Iowa Health Care",
+    commodity: "Medical Supplies (Non-hazmat)",
+    pickupTime: "Tomorrow 7:00 AM",
+    equipment: "Dry Van 53ft",
+    notes: "Temp-sensitive packaging. Deliver to SE Iowa Regional Medical Center.",
+  },
+  {
+    id: "sh-6",
+    origin: "Cedar Rapids, IA",
+    originState: "IA",
+    destination: "Dubuque, IA",
+    destinationState: "IA",
+    miles: 82,
+    pay: 340,
+    duration: "2 hrs",
+    type: "Shuttle",
+    company: "John Deere Dubuque Works",
+    commodity: "Tractor Cab Assemblies",
+    pickupTime: "Tomorrow 5:00 AM",
+    equipment: "Flatbed 48ft",
+    notes: "Oversized cab assemblies, strapped/tarped. JD facility badge required.",
+  },
+]
+
 // Accurate coordinates for the I-80 relay corridor
 export const TRUCK_STOP_COORDS: { name: string; lat: number; lng: number }[] = [
   { name: "Melrose Park, IL", lat: 41.9006, lng: -87.8567 },
@@ -570,6 +688,40 @@ export const TRUCK_STOP_COORDS: { name: string; lat: number; lng: number }[] = [
   { name: "Fontana, CA (Pilot #674)", lat: 34.0922, lng: -117.4350 },
   { name: "Rialto, CA (Amazon LAX4)", lat: 34.1064, lng: -117.3703 },
 ]
+
+// City coordinate lookup for Mapbox maps
+// Covers all cities referenced in legs, loads, and driver data
+export const CITY_COORDS: Record<string, { lat: number; lng: number }> = {
+  "Melrose Park, IL":    { lat: 41.9006, lng: -87.8567 },
+  "Iowa City, IA":       { lat: 41.6611, lng: -91.5302 },
+  "Coralville, IA":      { lat: 41.6766, lng: -91.5918 },
+  "North Platte, NE":    { lat: 41.1239, lng: -100.7654 },
+  "St. George, UT":      { lat: 37.0965, lng: -113.5684 },
+  "Rialto, CA":          { lat: 34.1064, lng: -117.3703 },
+  "Fontana, CA":         { lat: 34.0922, lng: -117.4350 },
+  "Chicago, IL":         { lat: 41.8781, lng: -87.6298 },
+  "Los Angeles, CA":     { lat: 34.0522, lng: -118.2437 },
+  "Grand Island, NE":    { lat: 40.9264, lng: -98.3420 },
+  "Kansas City, MO":     { lat: 39.0997, lng: -94.5786 },
+  "Omaha, NE":           { lat: 41.2565, lng: -95.9345 },
+  "Des Moines, IA":      { lat: 41.5868, lng: -93.6250 },
+  "Kearney, NE":         { lat: 40.6993, lng: -99.0832 },
+  "Cheyenne, WY":        { lat: 41.1400, lng: -104.8202 },
+  "Lincoln, NE":         { lat: 40.8136, lng: -96.7026 },
+  "Denver, CO":          { lat: 39.7392, lng: -104.9903 },
+  "Barstow, CA":         { lat: 34.8958, lng: -117.0173 },
+  "Salt Lake City, UT":  { lat: 40.7608, lng: -111.8910 },
+  "Davenport, IA":       { lat: 41.5236, lng: -90.5776 },
+  "Indianapolis, IN":    { lat: 39.7684, lng: -86.1581 },
+  "Minneapolis, MN":     { lat: 44.9778, lng: -93.2650 },
+  "St. Louis, MO":       { lat: 38.6270, lng: -90.1994 },
+  "Cedar Rapids, IA":    { lat: 41.9779, lng: -91.6656 },
+  "Muscatine, IA":       { lat: 41.4245, lng: -91.0432 },
+  "Waterloo, IA":        { lat: 42.4928, lng: -92.3426 },
+  "Walcott, IA":         { lat: 41.5847, lng: -90.7718 },
+  "Burlington, IA":      { lat: 40.8075, lng: -91.1129 },
+  "Dubuque, IA":         { lat: 42.5006, lng: -90.6646 },
+}
 
 // HOS constants matching FMCSA 49 CFR 395.3
 export const HOS_RULES = {

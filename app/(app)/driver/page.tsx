@@ -4,7 +4,8 @@ import { useState } from "react"
 import { SlidersHorizontal, Wifi, WifiOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { LegCard } from "@/components/leg-card"
-import { AVAILABLE_LEGS, DEMO_DRIVERS, HOS_RULES } from "@/lib/mock-data"
+import { DriverMap } from "@/components/driver-map"
+import { AVAILABLE_LEGS, DEMO_DRIVERS, HOS_RULES, SHORT_HAUL_TRIPS } from "@/lib/mock-data"
 
 const driver = DEMO_DRIVERS[0]
 
@@ -99,6 +100,19 @@ export default function DriverDashboardPage() {
           <span className="text-border">|</span>
           <span>{driver.totalLoads} loads</span>
         </div>
+      </div>
+
+      {/* Available Legs Map */}
+      <div className="rounded-2xl bg-card border border-border p-4">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
+            Available Legs
+          </span>
+          <span className="text-[10px] text-muted-foreground">
+            {filteredLegs.length} loads on board
+          </span>
+        </div>
+        <DriverMap legs={filteredLegs} shortHauls={SHORT_HAUL_TRIPS} driver={driver} />
       </div>
 
       {/* Sync status (offline-tolerant) */}
