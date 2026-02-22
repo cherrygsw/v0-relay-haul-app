@@ -139,3 +139,35 @@
 html {
   scroll-behavior: smooth;
 }
+
+/* Mapbox popup overrides for dark theme */
+.mapboxgl-popup-content {
+  background: var(--card) !important;
+  color: var(--foreground) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  padding: 0 !important;
+  box-shadow: 0 8px 32px oklch(0 0 0 / 0.4) !important;
+}
+
+.mapboxgl-popup-tip {
+  border-top-color: var(--card) !important;
+}
+
+.mapboxgl-popup-close-button {
+  color: var(--muted-foreground) !important;
+  font-size: 16px !important;
+  padding: 4px 8px !important;
+  right: 4px !important;
+  top: 4px !important;
+}
+
+.mapboxgl-popup-close-button:hover {
+  color: var(--foreground) !important;
+  background: transparent !important;
+}
+
+/* Hide Mapbox attribution for cleaner look */
+.mapboxgl-ctrl-attrib {
+  display: none !important;
+}

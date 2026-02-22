@@ -571,6 +571,34 @@ export const TRUCK_STOP_COORDS: { name: string; lat: number; lng: number }[] = [
   { name: "Rialto, CA (Amazon LAX4)", lat: 34.1064, lng: -117.3703 },
 ]
 
+// City coordinate lookup for Mapbox maps
+// Covers all cities referenced in legs, loads, and driver data
+export const CITY_COORDS: Record<string, { lat: number; lng: number }> = {
+  "Melrose Park, IL":    { lat: 41.9006, lng: -87.8567 },
+  "Iowa City, IA":       { lat: 41.6611, lng: -91.5302 },
+  "Coralville, IA":      { lat: 41.6766, lng: -91.5918 },
+  "North Platte, NE":    { lat: 41.1239, lng: -100.7654 },
+  "St. George, UT":      { lat: 37.0965, lng: -113.5684 },
+  "Rialto, CA":          { lat: 34.1064, lng: -117.3703 },
+  "Fontana, CA":         { lat: 34.0922, lng: -117.4350 },
+  "Chicago, IL":         { lat: 41.8781, lng: -87.6298 },
+  "Los Angeles, CA":     { lat: 34.0522, lng: -118.2437 },
+  "Grand Island, NE":    { lat: 40.9264, lng: -98.3420 },
+  "Kansas City, MO":     { lat: 39.0997, lng: -94.5786 },
+  "Omaha, NE":           { lat: 41.2565, lng: -95.9345 },
+  "Des Moines, IA":      { lat: 41.5868, lng: -93.6250 },
+  "Kearney, NE":         { lat: 40.6993, lng: -99.0832 },
+  "Cheyenne, WY":        { lat: 41.1400, lng: -104.8202 },
+  "Lincoln, NE":         { lat: 40.8136, lng: -96.7026 },
+  "Denver, CO":          { lat: 39.7392, lng: -104.9903 },
+  "Barstow, CA":         { lat: 34.8958, lng: -117.0173 },
+  "Salt Lake City, UT":  { lat: 40.7608, lng: -111.8910 },
+  "Davenport, IA":       { lat: 41.5236, lng: -90.5776 },
+  "Indianapolis, IN":    { lat: 39.7684, lng: -86.1581 },
+  "Minneapolis, MN":     { lat: 44.9778, lng: -93.2650 },
+  "St. Louis, MO":       { lat: 38.6270, lng: -90.1994 },
+}
+
 // HOS constants matching FMCSA 49 CFR 395.3
 export const HOS_RULES = {
   maxDrivingHours: 11,        // Max driving in a shift

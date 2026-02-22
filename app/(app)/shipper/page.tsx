@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { RouteVisualizer } from "@/components/route-visualizer"
+import { RelayMap } from "@/components/relay-map"
 import { DEMO_LOAD } from "@/lib/mock-data"
 
 export default function ShipperPortalPage() {
@@ -185,9 +186,9 @@ export default function ShipperPortalPage() {
                   </div>
                 </div>
 
-                {/* Route Map */}
-                <div className="mb-6 rounded-xl overflow-hidden border border-border bg-secondary/30 p-4">
-                  <RouteMap />
+                {/* Interactive Route Map */}
+                <div className="mb-6">
+                  <RelayMap legs={load.legs} />
                 </div>
 
                 {/* Legs Table */}
@@ -298,86 +299,4 @@ export default function ShipperPortalPage() {
   )
 }
 
-function RouteMap() {
-  const cities = [
-    { name: "Melrose Park", x: 78, y: 25 },
-    { name: "Coralville", x: 60, y: 27 },
-    { name: "N. Platte", x: 35, y: 28 },
-    { name: "St. George", x: 12, y: 50 },
-    { name: "Rialto", x: 6, y: 60 },
-  ]
 
-  const segmentColors = [
-    { stroke: "oklch(0.52 0.12 40)", status: "active" },
-    { stroke: "oklch(0.6 0.1 160)", status: "active" },
-    { stroke: "oklch(0.7 0.14 70)", status: "searching" },
-    { stroke: "oklch(0.5 0.02 60)", status: "waiting" },
-  ]
-
-  return (
-    <div className="relative">
-      <svg viewBox="0 0 100 80" className="w-full h-auto" style={{ minHeight: "200px" }}>
-        {Array.from({ length: 6 }, (_, i) => (
-          <line key={`h${i}`} x1="0" y1={i * 16} x2="100" y2={i * 16}
-            stroke="oklch(0.88 0.01 75 / 0.6)" strokeWidth="0.15" />
-        ))}
-        {Array.from({ length: 8 }, (_, i) => (
-          <line key={`v${i}`} x1={i * 14} y1="0" x2={i * 14} y2="80"
-            stroke="oklch(0.88 0.01 75 / 0.6)" strokeWidth="0.15" />
-        ))}
-
-        {cities.slice(0, -1).map((city, i) => {
-          const next = cities[i + 1]
-          const color = segmentColors[i]
-          return (
-            <g key={i}>
-              <line
-                x1={city.x} y1={city.y} x2={next.x} y2={next.y}
-                stroke={color.stroke}
-                strokeWidth={color.status === "active" ? "0.8" : "0.5"}
-                strokeDasharray={color.status !== "active" ? "2,1.5" : "none"}
-                opacity={color.status === "active" ? 0.7 : 0.35}
-                strokeLinecap="round"
-              />
-            </g>
-          )
-        })}
-
-        {cities.map((city, i) => {
-          const isEndpoint = i === 0 || i === cities.length - 1
-          const color = i === 0
-            ? segmentColors[0].stroke
-            : i === cities.length - 1
-            ? "oklch(0.6 0.16 155)"
-            : segmentColors[Math.min(i, segmentColors.length - 1)].stroke
-          return (
-            <g key={city.name}>
-              <circle cx={city.x} cy={city.y} r={isEndpoint ? 3.5 : 2.5}
-                fill="none" stroke={color} strokeWidth="0.3" opacity="0.4" />
-              <circle cx={city.x} cy={city.y} r={isEndpoint ? 2 : 1.5}
-                fill={color} opacity="0.9" />
-              <text
-                x={city.x} y={city.y + (isEndpoint ? 7 : 6)}
-                textAnchor="middle" fontSize="2.8" fontWeight="600"
-                fill="oklch(0.5 0.02 60)" fontFamily="system-ui"
-              >
-                {city.name}
-              </text>
-            </g>
-          )
-        })}
-
-        <circle r="1.8" fill="oklch(0.52 0.12 40)" opacity="0.9">
-          <animate attributeName="cx" from="76" to="62" dur="4s" repeatCount="indefinite" />
-          <animate attributeName="cy" from="25.5" to="27" dur="4s" repeatCount="indefinite" />
-        </circle>
-        <circle r="4" fill="oklch(0.52 0.12 40)" opacity="0.1">
-          <animate attributeName="cx" from="76" to="62" dur="4s" repeatCount="indefinite" />
-          <animate attributeName="cy" from="25.5" to="27" dur="4s" repeatCount="indefinite" />
-          <animate attributeName="r" from="3" to="5" dur="1.5s" repeatCount="indefinite" />
-          <animate attributeName="opacity" from="0.15" to="0" dur="1.5s" repeatCount="indefinite" />
-        </circle>
-      </svg>
-    </div>
-  )
-}
